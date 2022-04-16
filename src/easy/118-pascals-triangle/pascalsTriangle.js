@@ -7,16 +7,15 @@ var generate = function(numRows) {
   let i = 0;
 
   while (i < numRows) {
-    const temporaryArray = new Array(i + 1).fill(1);
+    const arr = new Array(i + 1).fill(1);
     
     if (i >= 2) {
-      for (let j = 1; j < temporaryArray.length - 1; j++) {
-        temporaryArray[j] = output[i - 1][j - 1] + output[i - 1][j];
+      for (let j = 1; j < arr.length - 1; j++) {
+        arr[j] = output[i - 1][j - 1] + output[i - 1][j];
       }
     }
 
-    output.push(temporaryArray);
-
+    output.push(arr);
     i++;
   }
 

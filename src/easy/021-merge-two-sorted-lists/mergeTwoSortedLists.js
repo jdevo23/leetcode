@@ -4,7 +4,7 @@
  * @return {ListNode}
  */
 
-const { l1, l2 } = require("./linkedLists");
+const { node1, node4 } = require("./linkedLists");
 
 function ListNode(val, next) {
   this.val = val === undefined ? 0 : val;
@@ -35,4 +35,4 @@ var mergeTwoLists = function (list1, list2) {
   return dummy.next;
 };
 
-console.log(mergeTwoLists(l1, l2)); // output = [1,1,2,3,4,4]
+console.log(mergeTwoLists(node1, node4)); // output = [1,1,2,3,4,4]

@@ -8,31 +8,25 @@ class TreeNode:
 
 class Solution:
     def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
-        if (root == None):
+        if not root:
           return []
         
-        array1, array2 = [[root]], [[root.val]]
+        level, results = [root], []
 
-        pointer = 0
-
-        while(True):
-          arr1, arr2 = [], []
+        while level:
+          temp_level, temp_results = [], []
           
-          for node in array1[pointer]:
-            if (node.left):
-              arr1.append(node.left)
-              arr2.append(node.left.val)
-            if (node.right):
-              arr1.append(node.right)
-              arr2.append(node.right.val)
-            
-          if (len(arr1) != 0):
-            array1.append(arr1)
-            array2.append(arr2)
-          else:
-            return array2
-
-          pointer += 1
+          for node in level:
+            temp_results.append(node.val)
+            if node.left:
+              temp_level.append(node.left)
+            if node.right:
+              temp_level.append(node.right)
+          
+          results.append(temp_results)
+          level = temp_level
+        
+        return results
 
 testSolution = Solution()
 

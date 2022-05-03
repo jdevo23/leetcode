@@ -11,7 +11,7 @@ class Solution:
     def preorderTraversalRecursive(self, root: Optional[TreeNode]) -> List[int]:
       list = []
 
-      def recurse(self, node: Optional[TreeNode]) -> None:
+      def recurse(node: Optional[TreeNode]) -> None:
         if (node == None):
           return
         
@@ -19,12 +19,12 @@ class Solution:
           list.append(node.val)
 
         if (node.left):
-          recurse(self, node.left)
+          recurse(node.left)
 
         if (node.right):
-          recurse(self, node.right)
+          recurse(node.right)
         
-      recurse(self, root)
+      recurse(root)
 
       return list
 

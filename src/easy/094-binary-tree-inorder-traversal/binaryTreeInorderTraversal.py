@@ -10,19 +10,19 @@ class Solution:
     def inorderTraversalRecursive(self, root: Optional[TreeNode]) -> List[int]:
         list = []
 
-        def recurse(self, node: Optional[TreeNode]) -> None:
+        def recurse(node: Optional[TreeNode]) -> None:
           if (node == None):
             return
           
           if (node.left):
-            recurse(self, node.left)
+            recurse(node.left)
           
           list.append(node.val)
 
           if (node.right):
-            recurse(self, node.right)
+            recurse(node.right)
           
-        recurse(self, root)
+        recurse(root)
 
         return list
     

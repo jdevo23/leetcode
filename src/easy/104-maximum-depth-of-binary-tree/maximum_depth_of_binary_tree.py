@@ -11,22 +11,22 @@ class Solution:
         answer = 0
 
         if not root:
-          return answer
-        
+            return answer
+
         def recurse(node: Optional[TreeNode], count: int) -> None:
-          count += 1
-          nonlocal answer
-          answer = max(answer, count)
+            count += 1
+            nonlocal answer
+            answer = max(answer, count)
 
-          if not node:
-            return
+            if not node:
+                return
 
-          if node.left:
-            recurse(node.left, count)
+            if node.left:
+                recurse(node.left, count)
 
-          if node.right:
-            recurse(node.right, count)
-          
+            if node.right:
+                recurse(node.right, count)
+
         recurse(root, answer)
 
         return answer

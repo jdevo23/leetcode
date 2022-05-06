@@ -1,3 +1,6 @@
 *.cpp
 TODO.md
 .vscode
+Lib
+Scripts
+pyvenv.cfg

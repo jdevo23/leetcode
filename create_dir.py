@@ -22,6 +22,8 @@ def generate_py_filename(string):
 
 
 def generate_js_filename(string):
+    split = string.split('-')
+    string = split[0] + ''.join([x.capitalize() for x in split[1:]])
     return f"{string}.js"
 
 

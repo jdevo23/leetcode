@@ -19,6 +19,7 @@ var solution = function(isBadVersion) {
      */
     
     return function(n) {
+        let right = n;
         let left = 1;
         while (left < right) {
             m = Math.floor((left + right) / 2);

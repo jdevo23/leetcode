@@ -1,8 +1,6 @@
-#!\C:\Users\Admin\Documents\projects\leetcode\Scripts\activate.bat
-
 """
-    Input a Leetcode question URL (example: https://leetcode.com/problems/add-two-numbers/)
-    and the script will generate a folder and files.
+	Input a Leetcode question URL (example: https://leetcode.com/problems/add-two-numbers/)
+	to generate a folder and files.
 """
 
 import sys
@@ -10,97 +8,246 @@ import os
 from typing import List
 import re
 import requests
+import json
+import getch
 
+REFERER_URL = "https://leetcode.com"
 GRAPHQL_URL = "https://leetcode.com/graphql"
 
+langs = [
+	{
+		"lang": "C",
+		"langSlug": "c",
+		"ext": "c",
+		"casing": "snake",
+	},
+	{
+		"lang": "C++",
+		"langSlug": "cpp",
+		"ext": "cpp",
+		"casing": "snake",
+	},
+	{
+		"lang": "JavaScript",
+		"langSlug": "javascript",
+		"ext": "js",
+		"casing": "camel",
+	},
+	{
+		"lang": "Python3",
+		"langSlug": "python3",
+		"ext": "py",
+		"casing": "snake",
+	},
+	{
+		"lang": "Rust",
+		"langSlug": "rust",
+		"ext": "rs",
+		"casing": "snake",
+	},
+	{
+		"lang": "TypeScript",
+		"langSlug": "typescript",
+		"ext": "ts",
+		"casing": "camel",
+	},
+	{
+		"lang": "C#",
+		"langSlug": "csharp",
+	},
+	{
+		"lang": "Python",
+		"langSlug": "python",
+	},
+	{
+		"lang": "Java",
+		"langSlug": "java",
+	},
+	{
+		"lang": "PHP",
+		"langSlug": "php",
+	},
+	{
+		"lang": "Swift",
+		"langSlug": "swift",
+	},
+	{
+		"lang": "Kotlin",
+		"langSlug": "kotlin",
+	},
+	{
+		"lang": "Dart",
+		"langSlug": "dart",
+	},
+	{
+		"lang": "Go",
+		"langSlug": "golang",
+	},
+	{
+		"lang": "Ruby",
+		"langSlug": "ruby",
+	},
+	{
+		"lang": "Scala",
+		"langSlug": "scala",
+	},
+	{
+		"lang": "Rust",
+		"langSlug": "rust",
+	},
+	{
+		"lang": "Racket",
+		"langSlug": "racket",
+	},
+	{
+		"lang": "Erlang",
+		"langSlug": "erlang",
+	},
+	{
+		"lang": "Elixir",
+		"langSlug": "elixir",
+	},
+]
 
-def generate_directory_name(q_id: str, string: str) -> str:
-    q_id = str(q_id).zfill(3)
-    return f"{q_id}-{string}"
+# remove languages I don't plan to use
+langs = langs[:6]
 
 
-def generate_py_filename(string: str) -> str:
-    _s = string.replace('-', '_')
-    return f"{_s}.py"
+""" FUNCTIONS """
+# expects string in hyphenated format
+def convert_to_snake_case(string: str) -> str:
+	s = string.replace('-', '_')
+	return s
 
 
-def generate_js_filename(string: str) -> str:
-    split = string.split('-')
-    string = split[0] + ''.join([x.capitalize() for x in split[1:]])
-    return f"{string}.js"
+# expects string in hyphenated format
+def convert_to_camel_case(string: str) -> str:
+	split = string.split('-')
+	s = split[0] + ''.join([x.capitalize() for x in split[1:]])
+	return s
+
+
+def create_directory_name(q_id: str, string: str) -> str:
+	q_id = str(q_id).zfill(3)
+	return f"{q_id}-{string}"
+
+
+def create_filename(initial_string: str, casing: str, extension: str) -> str:
+	filename = ""
+
+	match casing:
+		case "snake":
+			filename = convert_to_snake_case(initial_string)
+		case "camel":
+			filename = convert_to_camel_case(initial_string)
+		case _:
+			print("ERROR: failed to create filename")
+			return filename
+
+	return f"{filename}.{extension}"
 
 
 def create_directory(path: str) -> None:
-    try:
-        os.mkdir(path)
-    except OSError as _e:
-        raise _e
+	try:
+		os.mkdir(path)
+	except OSError as _e:
+		raise _e
 
 
-def create_files(path: str, array: List[dict]) -> None:
-    for obj in array:
-        file_path = os.path.join(path, obj["filename"])
-        with open(file_path, 'w') as f:
-            f.write(obj["code"])
+def create_file(path: str, filename: str, code: str) -> None:
+	file_path = os.path.join(path, filename)
+	with open(file_path, 'w') as f:
+		f.write(code)
 
 
+""" MAIN """
 if __name__ == "__main__":
-    try:
-        url = sys.argv[1]
+	try:
+		url = sys.argv[1]
 
-        pattern = r"(?<=leetcode.com\/problems\/)(?=\S*['-])([a-zA-Z'-]+)"
-        question = re.search(pattern, url)[0]
+		pattern = r"(?<=leetcode.com\/problems\/)(?=\S*['-])([a-zA-Z'-]+)"
+		question = re.search(pattern, url)[0]
 
-        QUERY = """
-            { 
-                question (titleSlug: "%s") {
-                    questionFrontendId\n
-                    title\n
-                    titleSlug\n
-                    difficulty\n
-                    codeSnippets {\n
-                        lang\n
-                        langSlug\n
-                        code\n
-                    }\n
-                }
-            }
-        """ % question
+		QUERY = """
+			{ 
+				question (titleSlug: "%s") {
+					questionFrontendId\n
+					title\n
+					titleSlug\n
+					difficulty\n
+					categoryTitle\n
+					codeSnippets {\n
+						lang\n
+						langSlug\n
+						code\n
+					}\n
+				}
+			}
+		""" % question
+		# solution\n
 
-        with requests.Session() as s:
-            s.get(url)
-            csrftoken = s.cookies.get_dict()['csrftoken']
+		# BEGIN SESSION
+		with requests.Session() as s:
+			s.get(url)
+			s.headers["referer"] = REFERER_URL
+			response = s.post(
+				GRAPHQL_URL,
+				json={"query": QUERY}
+			).json()
 
-            s.headers["referer"] = url
-            s.headers.update({"x-csrftoken": csrftoken})
-            response = s.post(
-                GRAPHQL_URL,
-                json={"query": QUERY}
-            ).json()
 
-            data = response["data"]["question"]
+			# DATA
+			data = response["data"]["question"]
+			d_question_id = data["questionFrontendId"]
+			d_difficulty = data["difficulty"].lower()
+			d_title = data["title"]
+			d_title_slug = data["titleSlug"]
+			d_code_snippets = data["codeSnippets"]
 
-            question_id = data["questionFrontendId"]
-            difficulty = data["difficulty"]
-            slug = data["titleSlug"]
-            code_snippets = data["codeSnippets"]
 
-            dir_name = generate_directory_name(question_id, slug)
-            difficulty = difficulty.lower()
+			# GET USER INPUT FOR FILES TO CREATE
+			print("Press Y or N to answer the leetcode problem in a given language")
+			files_to_create = []
+			for l in langs:
+				print(f"{l["lang"]}")
 
-            array = []
-            ref = {"python3": generate_py_filename,
-                   "javascript": generate_js_filename}
+				# TODO: change this to a while loop to wait for correct input
+				key = getch.getch()
 
-            for snippet in code_snippets:
-                if snippet["langSlug"] in ref:
-                    array.append({"filename": ref[snippet["langSlug"]](
-                        slug), "code": snippet["code"]})
+				if key == "y" or key == "Y":
+					files_to_create.append(l)
 
-            path = os.path.join(f"{os.getcwd()}\\src\\{difficulty}", dir_name)
-            create_directory(path)
-            create_files(path, array)
 
-            print(f'Created directory "{dir_name}" in "{difficulty}".')
-    except Exception as _e:
-        print(_e)
+			if len(files_to_create) == 0:
+				print("NO FILES TO CREATE")
+				exit()
+
+
+			# CREATE THE DIRECTORY
+			dir_name = create_directory_name(d_question_id, d_title_slug)
+			path = os.path.join(f"{os.getcwd()}/src/{d_difficulty}", dir_name)
+			create_directory(path)
+
+
+			# CREATE THE FILES
+			files_created = []
+			for file in files_to_create:
+				filename = create_filename(d_title_slug, file["casing"], file["ext"])
+
+				snippet = ""
+				for s in d_code_snippets:
+					if s["langSlug"] == file["langSlug"]:
+						snippet = s["code"]	
+			
+				create_file(path, filename, snippet)
+				files_created.append(filename)
+
+
+			# PRINT OUTPUT
+			print(f'Created directory "{dir_name}" in "{d_difficulty}".')
+			print(f'Created files:')
+			for file in files_created:
+				print(file)
+
+	except Exception as _e:
+		print("ERROR:", _e)

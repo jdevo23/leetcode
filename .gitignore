@@ -1,7 +1,7 @@
-*.cpp
 TODO.md
 .vscode
 Lib
 Scripts
 pyvenv.cfg
-venv/**
+venv
+node_modules

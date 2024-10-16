@@ -49,6 +49,7 @@ langs = [
 		"lang": "TypeScript",
 		"langSlug": "typescript",
 		"ext": "ts",
+		"testExt": "test.ts",
 		"casing": "camel",
 	},
 	{
@@ -233,6 +234,7 @@ if __name__ == "__main__":
 			files_created = []
 			for file in files_to_create:
 				filename = create_filename(d_title_slug, file["casing"], file["ext"])
+				test_filename = create_filename(d_title_slug, file["casing"], file["testExt"]) if "testExt" in file else ""
 
 				snippet = ""
 				for s in d_code_snippets:
@@ -241,6 +243,10 @@ if __name__ == "__main__":
 			
 				create_file(path, filename, snippet)
 				files_created.append(filename)
+
+				if test_filename != "":
+					create_file(path, test_filename, "")
+					files_created.append(test_filename)
 
 
 			# PRINT OUTPUT

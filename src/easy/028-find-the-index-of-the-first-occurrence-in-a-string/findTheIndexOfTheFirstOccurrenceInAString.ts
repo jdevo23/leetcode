@@ -36,32 +36,4 @@ function strStr(haystack: string, needle: string): number {
     return result;
 };
 
-// TESTS
-const tests = [
-    {
-        haystack: "sadbutsad",
-        needle: "sad",
-        ans: 0,
-    },
-    {
-        haystack: "leetcode",
-        needle: "leeto",
-        ans: -1,
-    },
-    {
-        haystack: "a",
-        needle: "a",
-        ans: 0,
-    },
-];
-
-tests.forEach(({ haystack, needle, ans }) => {
-    const result = strStr(haystack, needle);
-
-    if (result === ans) {
-        console.log(`PASSED: expected ${ans}. You entered ${result}.`);
-        return;
-    }
-
-    console.log(`FAILED: expected ${ans}. You entered ${result}.`);
-});
+export default strStr;

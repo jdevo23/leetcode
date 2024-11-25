@@ -4,11 +4,11 @@ function findMinArrowShots(points: number[][]): number {
     let result = 1;
     let upper = points[0][1];
     for (let i = 1; i < points.length; i++) {
-		if (upper >= points[i][0]) {
-			continue;
-		}
-		result++;
-		upper = points[i][1];
+      if (upper >= points[i][0]) {
+        continue;
+      }
+      result++;
+      upper = points[i][1];
     }
 
     return result;

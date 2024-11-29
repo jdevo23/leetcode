@@ -46,6 +46,11 @@ const tests = [
         inputB: 2,
         output: true
     },
+    {
+        inputA: [0],
+        inputB: 1,
+        output: true
+    },
 ];
 
 tests.forEach(({ inputA, inputB, output }) => {
